@@ -1,0 +1,101 @@
+---
+- hosts: all
+  vars:
+    jenkins: 
+      home: /jenkins/home/
+      source: /jenkins/source/
+      image:
+        name: jenkins-pipeline-workshop
+      container:
+        name: jenkins-master
+      numexecutors: 4
+    digitalocean_api_token: "MUST_BE_SPECIFIED_FROM_COMMAND_LINE"
+    digitalocean_ssh_private_key: "{{ lookup('file', '../id_rsa_jam') }}"
+    digitalocean:
+      region: "lon1"
+      image_id: "docker-16-04"
+      idle_termination_in_minutes: "120"
+      init_script: "sudo apt-get update && sudo apt-get install -y openjdk-8-jdk"
+      node:
+        heavy_tasks:
+          labels: "docker build test"
+          size_id: "2gb"
+          numexecutors: "1"
+          cap: "4"
+        ligth_tasks:
+          labels: "ssh"
+          size_id: "2gb"
+          numexecutors: "6"
+          cap: "1"
+
+  tasks:
+
+    - name: Update repositories cache
+      changed_when: False
+      apt:
+        update_cache: yes
+    
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - python-pip
+  
+    - name: Install required pip packages
+      pip:
+        name: "{{ item }}"
+      with_items:
+        - docker-py
+
+    - name: Close all open port 
+      ufw: state=enabled policy=deny
+  
+    - name: Allow ssh traffic
+      ufw: rule=allow port=22 proto=tcp
+
+    - name: Allow traffic on port 8080
+      ufw: rule=allow port=8080 proto=tcp
+
+    - name: Create jenkins directories
+      file: path={{ item }} state=directory
+      with_items:
+        - "{{ jenkins.home }}"
+        - "{{ jenkins.source }}"
+
+    - name: Synchronize jenkins source files
+      synchronize: src=jenkins/ dest={{ jenkins.source }}
+
+    - name: Build the jenkins-master image
+      docker_image:
+        path: "{{ jenkins.source }}"
+        name: "{{ jenkins.image.name }}"
+        state: present
+        force: yes
+    
+    - name: Start jenkins-master container
+      docker_container:
+        name: "{{ jenkins.container.name }}"
+        image: "{{ jenkins.image.name }}"
+        state: started
+        ports:
+          - "8080:8080"
+        env:
+          hostname: "{{ ansible_default_ipv4.address }}"
+          admin_username: "{{ inventory_hostname }}"
+          admin_password: "{{ hostvars[inventory_hostname].id }}"
+          master_numexecutors: "{{ jenkins.numexecutors }}"
+          digitalocean_api_token: "{{ digitalocean_api_token }}"
+          digitalocean_ssh_private_key: "{{ digitalocean_ssh_private_key }}"
+          digitalocean_region: "{{ digitalocean.region }}"
+          digitalocean_image_id: "{{ digitalocean.image_id }}"
+          digitalocean_idle_termination_in_minutes: "{{ digitalocean.idle_termination_in_minutes }}"
+          digitalocean_init_script: "{{ digitalocean.init_script }}"
+          digitalocean_node_heavy_tasks_labels: "{{ digitalocean.node.heavy_tasks.labels }}"
+          digitalocean_node_heavy_tasks_size_id: "{{ digitalocean.node.heavy_tasks.size_id }}"
+          digitalocean_node_heavy_tasks_numexecutors: "{{ digitalocean.node.heavy_tasks.numexecutors }}"
+          digitalocean_node_heavy_tasks_cap: "{{ digitalocean.node.heavy_tasks.cap }}"
+          digitalocean_node_ligth_tasks_labels: "{{ digitalocean.node.ligth_tasks.labels }}"
+          digitalocean_node_ligth_tasks_size_id: "{{ digitalocean.node.ligth_tasks.size_id }}"
+          digitalocean_node_ligth_tasks_numexecutors: "{{ digitalocean.node.ligth_tasks.numexecutors }}"
+          digitalocean_node_ligth_tasks_cap: "{{ digitalocean.node.ligth_tasks.cap }}"
+

@@ -1,0 +1,27 @@
+---
+- hosts: all
+
+  tasks:
+
+    - name: Update repositories cache
+      changed_when: False
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - openjdk-8-jdk
+
+    - name: Close all open port 
+      ufw: state=enabled policy=deny
+  
+    - name: Allow ssh traffic
+      ufw: rule=allow port=22 proto=tcp
+
+    - name: Allow traffic on port 8080
+      ufw: rule=allow port=8080 proto=tcp
+
+    - name: Add SSH deploy key used during workshop
+      authorized_key: user=root key="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs+iCOXl8P3NRO8LQbh63VsaR0zqtsgS5qEqe3TS8b9EMs4OiT1GOKGyY7QWaFCEWOxM/pZwvP2T+QScz369JgYaFlBhS83z/DmuSgxAzr6cBrvZCwAoI46GCOqfaTG7zXEhzqX90dJCTlhLDRH9H0jqq7zhqDsPWbtBgh3G/CEpIASoLSWh2CjAGBTUJWnudklWsVhezSU2reP/GZ6imRQsLKGnoiN0v1BCH3hpf05FdLhVTBn5GmT2AvS4PatuWjMaUzNxE3foX38z0m8e5VopelAEdec4EiPF7y0b5GoJsymNugxCL34yz9pUxVKrKhCcyx8EHlN+m5TIo/AQ19 cdl-workshop-deploy-key"
