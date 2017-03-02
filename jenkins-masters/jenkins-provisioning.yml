@@ -13,6 +13,8 @@
     digitalocean_ssh_private_key: "{{ lookup('file', '../id_rsa_jam') }}"
     # digitalocean_ssh_key_id is DO account specific => @Baptiste you certainly need to update this property according to your DigitalOcean setup ...
     digitalocean_ssh_key_id: "6848943"
+    digitalocean_instance_cap: "4"
+    digitalocean_timeout_minutes: "5"
     digitalocean:
       region: "lon1"
       image_id: "docker-16-04"
@@ -89,6 +91,8 @@
           digitalocean_api_token: "{{ digitalocean_api_token }}"
           digitalocean_ssh_private_key: "{{ digitalocean_ssh_private_key }}"
           digitalocean_ssh_key_id: "{{ digitalocean_ssh_key_id }}"
+          digitalocean_instance_cap: "{{ digitalocean_instance_cap }}"
+          digitalocean_timeout_minutes: "{{ digitalocean_timeout_minutes }}"
           digitalocean_region: "{{ digitalocean.region }}"
           digitalocean_image_id: "{{ digitalocean.image_id }}"
           digitalocean_idle_termination_in_minutes: "{{ digitalocean.idle_termination_in_minutes }}"

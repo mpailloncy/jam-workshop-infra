@@ -20,6 +20,9 @@ def numExecutors = getMandatoryParameter('master_numexecutors')
 def digiOceanApiToken = getMandatoryParameter('digitalocean_api_token')
 def digiOceanSshPrivateKey = getMandatoryParameter('digitalocean_ssh_private_key') 
 def digiOceanSshKeyId = getMandatoryParameter('digitalocean_ssh_key_id')
+def digiOceanInstanceCap = getMandatoryParameter('digitalocean_instance_cap')
+def digiOceanTimeoutMinutes = getMandatoryParameter('digitalocean_timeout_minutes')
+
 def digiOceanRegion = getMandatoryParameter('digitalocean_region')
 def digiOceanImageId = getMandatoryParameter('digitalocean_image_id')
 def digiOceanIdleTerminationInMinutes = getMandatoryParameter('digitalocean_idle_termination_in_minutes')
@@ -103,6 +106,9 @@ def digitalOcean = new com.dubture.jenkins.digitalocean.Cloud(
 	digiOceanApiToken, 
 	digiOceanSshPrivateKey, 
 	digiOceanSshKeyId,
+	digiOceanInstanceCap,
+	digiOceanTimeoutMinutes, 
+	cloudTemplates)
 
 Jenkins.instance.clouds.replace(digitalOcean)
 Jenkins.instance.save()
