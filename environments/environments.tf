@@ -7,7 +7,7 @@ resource "digitalocean_droplet" "staging" {
     region = "lon1"
     size = "512mb"
 
-    ssh_keys = [ "84:e9:bc:7d:01:63:cc:f4:96:41:71:50:8c:0a:e6:4e" ]
+    ssh_keys = [ "56:4f:3a:5e:88:7b:26:4a:68:8f:b3:25:17:71:19:88" ]
 
     connection {
           user = "root"
@@ -33,7 +33,7 @@ resource "digitalocean_droplet" "prod" {
   region = "lon1"
   size = "512mb"
 
-  ssh_keys = [ "84:e9:bc:7d:01:63:cc:f4:96:41:71:50:8c:0a:e6:4e" ]
+  ssh_keys = [ "56:4f:3a:5e:88:7b:26:4a:68:8f:b3:25:17:71:19:88" ]
 
   connection {
     user = "root"

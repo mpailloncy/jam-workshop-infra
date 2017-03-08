@@ -2,12 +2,12 @@ variable "do_token" {}
 
 variable "ssh_public_key" {
   type    = "string"
-  default = "../id_rsa_cdl.pub"
+  default = "../id_rsa_jam.pub"
 }
 
 variable "ssh_private_key" {
   type    = "string"
-  default = "../id_rsa_cdl"
+  default = "../id_rsa_jam"
 }
 
 provider "digitalocean" {
