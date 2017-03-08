@@ -9,7 +9,7 @@ plan:
 	@terraform plan -var "do_token=${DO_API}" -var "count=$(n)"
 
 provision:
-	@terraform apply -var "do_token=${DO_API}" -var "count=$(n)" && sleep 10 && \
+	@terraform apply -var "do_token=${DO_API}" -var "count=$(n)" && sleep 60 && \
 	export TERRAFORM_STATE_ROOT='.' && ansible-playbook -i terraform-inventory.py -e digitalocean_api_token="${DO_API}" sonarqube-provisioning.yml
 
 destroy:
