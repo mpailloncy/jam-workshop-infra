@@ -81,6 +81,7 @@
         name: "{{ jenkins.container.name }}"
         image: "{{ jenkins.image.name }}"
         state: started
+        restart_policy: always
         ports:
           - "8080:8080"
         env:

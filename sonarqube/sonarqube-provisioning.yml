@@ -42,3 +42,4 @@
         state: started
         ports:
           - "9000:9000"
+        restart_policy: always
