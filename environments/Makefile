@@ -9,7 +9,8 @@ plan:
 	@terraform plan -var "do_token=${DO_API}" -var "count=$(n)"
 
 provision:
-	@terraform apply -var "do_token=${DO_API}" -var "count=$(n)" && sleep 10 && \
+	@terraform apply -var "do_token=${DO_API}" -var "count=$(n)" && \
+	echo "Sleeping a bit to wait for actual machines availability" && sleep 60 && \
 	export TERRAFORM_STATE_ROOT='.' && ansible-playbook -i terraform-inventory.py -e digitalocean_api_token="${DO_API}" environments-provisioning.yml
 
 destroy:
@@ -23,4 +24,3 @@ infos:
 go:
 	@echo "Connecting to $(machine)"
 	@ssh (current_dir)/../id_rsa_jam root@`jq --raw-output "._meta.hostvars[\"$(machine)\"] | .public_ipv4" <<< \`export TERRAFORM_STATE_ROOT='.' && ./terraform-inventory.py --list --pretty\``
-
