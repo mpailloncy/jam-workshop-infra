@@ -1,0 +1,44 @@
+---
+- hosts: all
+  vars:
+    sonarqube: 
+      image:
+        name: sonarqube
+      container:
+        name: sonarqube
+
+  tasks:
+
+    - name: Update repositories cache
+      changed_when: False
+      apt:
+        update_cache: yes
+    
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - python-pip
+  
+    - name: Install required pip packages
+      pip:
+        name: "{{ item }}"
+      with_items:
+        - docker-py
+
+    - name: Close all open port 
+      ufw: state=enabled policy=deny
+  
+    - name: Allow ssh traffic
+      ufw: rule=allow port=22 proto=tcp
+
+    - name: Allow traffic on port 9000
+      ufw: rule=allow port=9000 proto=tcp
+
+    - name: Start sonarqube container
+      docker_container:
+        name: "{{ sonarqube.container.name }}"
+        image: "{{ sonarqube.image.name }}"
+        state: started
+        ports:
+          - "9000:9000"
