@@ -3,3 +3,4 @@
 .idea/
 *.iml
 **/id_rsa_jam*
+_dist
