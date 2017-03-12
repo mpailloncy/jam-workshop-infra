@@ -1,10 +1,19 @@
-= Jenkins workshop masters provisionning
+= Toulouse JAM Workshop infrastructure  
 
-Workshop machines are provisioned using Terraform and Ansible on DigitalOcean cloud.
+== About
+
+This repository contains all the stuff needed to provision a Jenkins master, a SonarQube instance and some staging/"prod" environments for a workshop usecase.
+
+All machines are provisioned using Terraform/Ansible and Docker on the DigitalOcean cloud.
+
+Jenkins master is automatically configured with the DigitalOcean Plugin which permits to dynamically provision Jenkins agents on demand.
 
 == Prerequisites
 
+* it assumes that you are on a Linux system (only tested on Fedora 25)
 * ansible and terraform installed locally
+* a variable DO_API with DigitalOcean credentials needs to be exported on the current shell
+* a ssh key pair needs to be available on the root of this repository (id_rsa_jam, id_rsa_jam.pub), and must be added to your DigitalOcean settings
 
 == Machines creation
 
