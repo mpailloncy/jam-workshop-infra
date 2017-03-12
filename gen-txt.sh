@@ -21,4 +21,5 @@ do
   echo "Master Jenkins: "$( grep "jenkins-$n " _dist/infos-jenkins-masters ) >> _dist/$n.txt
   echo "Staging env: "$( grep "staging-$n " _dist/infos-environments ) >> _dist/$n.txt
   echo "Prod env: "$( grep "prod-$n " _dist/infos-environments ) >> _dist/$n.txt
+  echo "SonarQube env: "$( grep "sonarqube-$n " _dist/infos-sonarqube ) >> _dist/$n.txt
 done
