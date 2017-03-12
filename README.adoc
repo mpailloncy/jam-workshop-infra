@@ -10,12 +10,16 @@ Jenkins master is automatically configured with the DigitalOcean Plugin which pe
 
 == Prerequisites
 
-* it assumes that you are on a Linux system (only tested on Fedora 25)
-* ansible and terraform installed locally
-* a variable DO_API with DigitalOcean credentials needs to be exported on the current shell
-* a ssh key pair needs to be available on the root of this repository (id_rsa_jam, id_rsa_jam.pub), and must be added to your DigitalOcean settings
+It's assume that : 
+
+* you are on a Linux system (only tested on Fedora 25)
+* you have ansible and terraform installed locally
+* a variable DO_API with DigitalOcean credentials is exported on the current shell
+* a ssh key pair is available on the root of this repository (id_rsa_jam, id_rsa_jam.pub), and must be added to your DigitalOcean settings
 
 == Machines creation
+
+Inside each directory (`jenkins-masters`, `sonarqube`, `environments`), you can access some kind of provisioning commands.
 
 .Display terraform execution plan to provision X machines :
 [source,bash]
@@ -23,19 +27,19 @@ Jenkins master is automatically configured with the DigitalOcean Plugin which pe
 $> make plan n=X
 ----
 
-.Trigger provisionning of X machines :
+.Trigger provisioning of X machines :
 [source,bash]
 ----
 $> make provision n=X
 ----
 
-This action will create (or update) X new machines on DigitalOcean cloud accordingly to configuration specified into `jenkins.tf` file.
-Then, a provisionning with Ansible `playbook.yml` file is triggered on all created/updates machines.
+This action will create (or update) X new machines on DigitalOcean cloud accordingly to the configuration specified into `jenkins-masters/jenkins-masters.tf`, `environments/environments.tf` or `sonarqube/sonarqube.tf` files.
+Then, a provisioning with Ansible playbooks (see `*.yml` files inside each directory) is triggered on all created/updates machines with a dynamic inventory of Ansible.
 
 CAUTION: this action is strictly idempotent. It means that if you start with "make provision n=5" and then execute "make provision n=4", the fifth machine will be directly deleted by terraform !!
 To be sure, first run "make plan n = X" and read carefully what are Terraform's plans before a "make provision" action.
 
-== What's the username/password of my instance ?
+=== What's the username/password of my instance ?
 
 By default, Jenkins master are provisioned with :
 
@@ -48,7 +52,7 @@ By default, Jenkins master are provisioned with :
 $> make infos
 ----
 
-== Display Jenkins logs of a target machine
+=== Display Jenkins logs of a target machine
 
 .Assuming you have direct access to target machine (ssh key pushed), you can execute the following command :
 [source,bash]
@@ -56,11 +60,41 @@ $> make infos
 $> make logs jenkins-2
 ----
 
-== Connect to a target machine
+=== Connect to a target machine
 
 .Assuming you have direct access to target machine (ssh key pushed), you can execute the following command :
 [source,bash]
 ----
 $> make go jenkins-10
 ----
+
+
+=== Generate all informations for attendees
+
+You can launch the script `gen-txt.sh` to create one file per attendee containing all dedicated instances informations.
+All files are created inside a `_dist` directory.
+
+== Known limitations
+
+Jenkins DigitalOcean Plugin needs to have your "ssh_key_id" number during provisioning (see jenkins-masters/jenkins-provisioning.yml#14). This is a DigitalOcean specific number and it's completely dependant of your DigitalOcean settings. To retrieve this number, the only way I found is to configure manually the plugin the first time, retrieve the config.xml of Jenkins and get this number from the file.
+ 
+CAUTION: DigitalOcean sets a limit of number of Droplets. You need to increase both on DigitalOcean side (a dedicated form is available on DigitalOcean website) and on  the file `jenkins-masters/jenkins-provisioning.yml` depending on the number of attendees.
+
+CAUTION: the `instanceCap` property specified inside the Jenkins DigitalOcean plugin configuration is global to all attendees (since it's the same API key for each attendee).
+
+== TODO
+
+There are some "code duplication" and limitations that could be improved here.
+
+* We could have a "meta" Makefile on the root and add a kind of `action` targeting a specific directory. For example : `make jenkins provision n=2`
+* The script `terraform-inventory.py` used to create a dynamic inventory of Ansible and Terraform is currently duplicated on each subdirectory
+* The SSH key pair informations specified could be specified more dynamically using Terraform variables.
+* The `digitalocean.tf` file is also duplicated on each subdirectory
+
+Yeah, it's a little dirty, but those scripts have been evolved/improved in hurry ! And PRs are always welcome :-)
+
+
+
+
+
 
