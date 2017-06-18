@@ -7,7 +7,7 @@ resource "digitalocean_droplet" "jenkins" {
     region = "lon1"
     size = "2gb"
     
-    ssh_keys = [ "56:4f:3a:5e:88:7b:26:4a:68:8f:b3:25:17:71:19:88" ]
+    ssh_keys = [ "a4:03:fc:ac:6c:2b:28:f3:23:d3:91:5b:a5:e5:2d:2c" ]
 
     connection {
           user = "root"

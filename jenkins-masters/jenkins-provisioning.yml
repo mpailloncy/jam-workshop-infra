@@ -12,8 +12,8 @@
     digitalocean_api_token: "MUST_BE_SPECIFIED_FROM_COMMAND_LINE"
     digitalocean_ssh_private_key: "{{ lookup('file', '../id_rsa_jam') }}"
     # digitalocean_ssh_key_id is DO account specific => @Baptiste you certainly need to update this property according to your DigitalOcean setup ...
-    digitalocean_ssh_key_id: "6848943"
     digitalocean_instance_cap: "4"
+    digitalocean_ssh_key_id: "9746665"
     digitalocean_timeout_minutes: "5"
     digitalocean:
       region: "lon1"
