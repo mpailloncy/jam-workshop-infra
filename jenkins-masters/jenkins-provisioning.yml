@@ -12,8 +12,8 @@
     digitalocean_api_token: "MUST_BE_SPECIFIED_FROM_COMMAND_LINE"
     digitalocean_ssh_private_key: "{{ lookup('file', '../id_rsa_jam') }}"
     # digitalocean_ssh_key_id is DO account specific => @Baptiste you certainly need to update this property according to your DigitalOcean setup ...
-    digitalocean_instance_cap: "4"
     digitalocean_ssh_key_id: "9746665"
+    digitalocean_instance_cap: "999"
     digitalocean_timeout_minutes: "5"
     digitalocean:
       region: "lon1"
@@ -25,12 +25,12 @@
           labels: "docker build test"
           size_id: "2gb"
           numexecutors: "1"
-          cap: "4"
+          cap: "400"
         ligth_tasks:
           labels: "ssh"
           size_id: "2gb"
           numexecutors: "6"
-          cap: "1"
+          cap: "200"
 
   tasks:
 
