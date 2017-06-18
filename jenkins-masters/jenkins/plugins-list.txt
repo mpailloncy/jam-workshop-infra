@@ -9,3 +9,6 @@ cloudbees-bitbucket-branch-source
 digitalocean-plugin
 ssh-agent
 buildtriggerbadge
+pipeline-maven
+greenballs
+sonar

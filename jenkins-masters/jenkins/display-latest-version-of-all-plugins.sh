@@ -39,7 +39,7 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
  
 # Prerequisites : This script assumes that you have jq and curl installed locally
 
-url="https://updates.jenkins.io/experimental/update-center.actual.json"
+url="https://updates.jenkins.io/update-center.actual.json"
 pluginListfile="${__dir}/plugins-list.txt"
 [[ ! -f $pluginListfile ]] && echo "[ERROR] File listing target plugins not found : ${pluginListfile}. Please create it (one plugin id by line)." && exit 2
 
